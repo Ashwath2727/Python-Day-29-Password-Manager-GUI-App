@@ -49,14 +49,24 @@ def save_password_to_file():
     if len(website) == 0 or len(email) == 0 or len(password) == 0:
         messagebox.showerror("Error", "Please dont leave any fields empty!")
     else:
-        with open("data-main.json", "r") as file:
-            data = json.load(file)
+        try:
+            with open("data-main.json", "r") as file:
+                # Reading old data
+                data = json.load(file)
 
+        except FileNotFoundError:
+            with open('data-main.json', 'w') as file:
+                json.dump(new_data, file, indent=4)
+
+        else:
+            # Updating the old data with new data
             data.update(new_data)
 
-        with open("data-main.json", "w") as file:
-            json.dump(data, file, indent=4)
+            with open("data-main.json", "w") as file:
+                #saving the updated data
+                json.dump(data, file, indent=4)
 
+        finally:
             website_entry.delete(0, tk.END)
             password_entry.delete(0, tk.END)
 
