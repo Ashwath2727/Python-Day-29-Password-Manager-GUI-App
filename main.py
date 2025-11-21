@@ -70,6 +70,28 @@ def save_password_to_file():
             website_entry.delete(0, tk.END)
             password_entry.delete(0, tk.END)
 
+# ---------------------------- SEARCH PASSWORD ------------------------------- #
+def find_password():
+    print("Searching...")
+
+    website = website_entry.get()
+    print(website)
+
+    try:
+        with open("data-main.json", "r") as file:
+            data = json.load(file)
+            print(data.get(website))
+
+            if website in data.keys():
+                messagebox.showinfo(website, f"Email: {data[website]['email']} \nPassword: {data[website]['password']}")
+
+            else:
+                messagebox.showerror("Error", "No details for the website exists")
+
+    except FileNotFoundError:
+        print("File not found.")
+        messagebox.showerror("Error", "No Data File Found.")
+
 # ---------------------------- UI SETUP ------------------------------- #
 window = tk.Tk()
 window.title("Password Manager")
@@ -89,9 +111,11 @@ email_label.grid(row=2, column=0, pady=10)
 password_label = tk.Label(text="Password:")
 password_label.grid(row=3, column=0, pady=10)
 
-website_entry = tk.Entry(width=45)
+# website_entry = tk.Entry()
+website_entry = tk.Entry(width=27)
 website_entry.focus()
-website_entry.grid(row=1, column=1, columnspan=2, pady=10)
+website_entry.grid(row=1, column=1, pady=10)
+# website_entry.grid(row=1, column=1, pady=10)
 
 email_entry = tk.Entry(width=45)
 email_entry.insert(0, "ashwath@gmail.com")
@@ -105,5 +129,8 @@ gen_pass_button.grid(row=3, column=2, pady=10)
 
 add_button = tk.Button(text="Add", width=40, command=save_password_to_file)
 add_button.grid(row=4, column=1, columnspan=2, pady=10)
+
+search_button = tk.Button(text="Search", width=15, command=find_password)
+search_button.grid(row=1, column=2, pady=10)
 
 window.mainloop()
